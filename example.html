@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=240, height=282, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>R1 App — Kit Example</title>
+<link rel="stylesheet" href="r1-ui-kit.css">
+<style>
+  /* App-specific styles only — everything R1-generic is in r1-ui-kit.css */
+
+  .screen { position:absolute; inset:0; display:none; flex-direction:column; }
+  .screen.active { display:flex; }
+
+  .header {
+    height:28px; min-height:28px;
+    display:flex; align-items:center;
+    padding:0 8px; gap:6px;
+    background:var(--r1-surface);
+    border-bottom:1px solid #2a2a2a;
+  }
+  .header .title { font-size:11px; font-weight:600; flex:1; }
+
+  .messages-list {
+    flex:1; overflow-y:auto; overflow-x:hidden;
+    padding:4px 6px;
+    display:flex; flex-direction:column; gap:3px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .messages-list::-webkit-scrollbar { width:2px; }
+  .messages-list::-webkit-scrollbar-thumb { background:#333; border-radius:2px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Your app screen -->
+  <div id="screen-main" class="screen active">
+    <div class="header">
+      <div class="title">My R1 App</div>
+      <!-- Keyboard trigger button -->
+      <div id="btn-keyboard" style="font-size:13px;cursor:pointer;padding:2px 4px;opacity:0.7;" title="Type">⌨️</div>
+    </div>
+
+    <!-- Messages / content area — pass to R1Kit.initAudioPlayback + initLongPressReact -->
+    <div class="messages-list r1-scroll-area" id="messages-list"></div>
+
+    <!-- PTT button — R1Kit auto-wires #r1-ptt-btn when present -->
+    <div id="r1-ptt-btn">🎙 HOLD TO SPEAK</div>
+  </div>
+
+</div>
+
+<script src="r1-ui-kit.js"></script>
+<script>
+
+// ─── Init kit ─────────────────────────────────────────────
+R1Kit.init({
+  appEl: document.getElementById('app'),
+
+  // Called whenever the user confirms a message (PTT transcript or keyboard send)
+  onSend: function(text) {
+    addMessage({ text, out: true, senderName: 'You', date: Math.floor(Date.now()/1000) });
+    // TODO: your send logic here
+  },
+
+  onScroll: function(direction) {
+    const list = document.getElementById('messages-list');
+    list.scrollBy({ top: direction === 'up' ? -40 : 40, behavior: 'smooth' });
+  },
+
+  onSelect: function() {
+    // R1 side-click — app-specific navigation
+  },
+
+  onBack: function() {
+    // R1 back — app-specific
+  },
+
+  // For landscape touch-scroll: return the element that should scroll
+  getScrollTarget: function() {
+    return document.getElementById('messages-list');
+  },
+});
+
+// ─── Wire keyboard button ─────────────────────────────────
+document.getElementById('btn-keyboard').addEventListener('click', function() {
+  R1Kit.showKeyboard({
+    history: messages,
+    onSend: function(text) {
+      addMessage({ text, out: true, senderName: 'You', date: Math.floor(Date.now()/1000) });
+      // TODO: your send logic here
+    },
+  });
+});
+
+// ─── Wire audio playback + long-press react ───────────────
+const msgList = document.getElementById('messages-list');
+R1Kit.initAudioPlayback(msgList);
+R1Kit.initLongPressReact(msgList, function(msgId, emoji) {
+  // TODO: send reaction to your backend
+  console.log('React', msgId, emoji);
+  R1Kit.toast(emoji);
+});
+
+// ─── Demo: render some messages ───────────────────────────
+let messages = [
+  { id: 1, text: 'Hey, how are you?', out: false, senderName: 'Alice', date: Math.floor(Date.now()/1000) - 300 },
+  { id: 2, text: '**Good** thanks! Check this:\n- Item one\n- Item two\n- Item three', out: true, senderName: 'You', date: Math.floor(Date.now()/1000) - 120 },
+  { id: 3, text: 'Here\'s a photo for you:', out: false, senderName: 'Alice', hasPhoto: true, photoUrl: 'https://picsum.photos/220/120', date: Math.floor(Date.now()/1000) - 60 },
+];
+
+function addMessage(m) {
+  m.id = m.id || Date.now();
+  messages.push(m);
+  renderMessages();
+}
+
+function renderMessages() {
+  const list = document.getElementById('messages-list');
+  list.innerHTML = messages.map(m => R1Kit.renderMessageHtml(m)).join('');
+  list.scrollTop = list.scrollHeight;
+}
+
+renderMessages();
+
+</script>
+</body>
+</html>

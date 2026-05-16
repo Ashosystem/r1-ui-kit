@@ -1,0 +1,365 @@
+/* ═══════════════════════════════════════════════════════════
+   R1 UI Kit — r1-ui-kit.css
+   Drop this into any R1 Creation app.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Design Tokens ──────────────────────────────────────── */
+:root {
+  --r1-bg:        #0e0e0e;
+  --r1-surface:   #1a1a1a;
+  --r1-surface-h: #252525;
+  --r1-accent:    #2aabee;
+  --r1-accent-dim:#1a6fa0;
+  --r1-text:      #e8e8e8;
+  --r1-text-dim:  #888;
+  --r1-out-bg:    #2b5278;
+  --r1-in-bg:     #1e1e1e;
+  --r1-danger:    #e53935;
+  --r1-confirm:   #43a047;
+  --r1-font:      'SF Pro Text', -apple-system, 'Segoe UI', sans-serif;
+  --r1-mono:      'SF Mono', 'Menlo', monospace;
+}
+
+/* ─── Base Dimensions ─────────────────────────────────────── */
+html, body {
+  width: 240px;
+  height: 282px;
+  overflow: hidden;
+  background: var(--r1-bg);
+  color: var(--r1-text);
+  font-family: var(--r1-font);
+  font-size: 11px;
+  line-height: 1.3;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#app {
+  position: absolute;
+  width: 240px; height: 282px;
+  top: 0; left: 0;
+  transition: transform 0.25s ease;
+}
+
+/* ─── Landscape Rotation ──────────────────────────────────── */
+#app.r1-landscape {
+  width: 282px; height: 240px;
+  top: 21px; left: -21px;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+body.r1-in-landscape .r1-scroll-area {
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* ─── Message Bubbles ─────────────────────────────────────── */
+.r1-msg-bubble {
+  max-width: 85%;
+  padding: 4px 7px;
+  border-radius: 8px;
+  font-size: 10px;
+  line-height: 1.35;
+  word-wrap: break-word;
+}
+.r1-msg-bubble.r1-in {
+  background: var(--r1-in-bg);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+}
+.r1-msg-bubble.r1-out {
+  background: var(--r1-out-bg);
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+.r1-msg-bubble.r1-has-photo { max-width: 96%; }
+
+.r1-msg-sender {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--r1-accent);
+  margin-bottom: 1px;
+}
+.r1-msg-time {
+  font-size: 7px;
+  color: rgba(255,255,255,0.4);
+  text-align: right;
+  margin-top: 1px;
+}
+
+/* Markdown inside bubbles */
+.r1-msg-bubble ul  { margin: 2px 0 2px 10px; padding: 0; }
+.r1-msg-bubble li  { margin: 1px 0; list-style: disc; }
+.r1-msg-bubble code {
+  background: rgba(255,255,255,0.12);
+  border-radius: 2px;
+  padding: 0 2px;
+  font-family: var(--r1-mono);
+  font-size: 9px;
+}
+.r1-msg-bubble pre {
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  padding: 3px 4px;
+  margin: 2px 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+.r1-msg-bubble pre code { background: none; padding: 0; }
+.r1-msg-bubble strong   { font-weight: 700; }
+.r1-msg-bubble em       { font-style: italic; }
+
+/* Images inside bubbles */
+.r1-msg-photo {
+  max-width: 100%;
+  border-radius: 5px;
+  margin-top: 3px;
+  display: block;
+}
+
+/* Reply quote */
+.r1-msg-reply {
+  font-size: 9px;
+  color: var(--r1-text-dim);
+  border-left: 2px solid var(--r1-accent);
+  padding: 1px 5px;
+  margin-bottom: 2px;
+  border-radius: 2px;
+  background: rgba(42,171,238,0.08);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.r1-msg-reply-author { color: var(--r1-accent); font-weight: 700; margin-right: 3px; }
+
+/* Reactions */
+.r1-msg-reactions { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; }
+.r1-msg-reaction  {
+  font-size: 9px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 1px 5px;
+}
+
+/* Audio player */
+.r1-audio-player {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(42,171,238,0.08);
+  border: 1px solid #2a2a2a; border-radius: 6px;
+  padding: 4px 7px; margin-top: 3px;
+  cursor: pointer; touch-action: manipulation;
+  user-select: none; -webkit-user-select: none;
+}
+.r1-audio-play-btn { font-size: 13px; flex-shrink: 0; pointer-events: none; }
+.r1-audio-label    { font-size: 10px; color: var(--r1-text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+.r1-audio-player.r1-playing { border-color: var(--r1-accent); background: rgba(42,171,238,0.18); }
+
+/* ─── PTT Button ──────────────────────────────────────────── */
+#r1-ptt-btn {
+  height: 36px; min-height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--r1-surface); border-top: 1px solid #2a2a2a;
+  font-size: 11px; font-weight: 600; color: var(--r1-accent);
+  user-select: none; -webkit-user-select: none;
+  cursor: pointer; letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+/* ─── Recording Overlay ───────────────────────────────────── */
+#r1-recording-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 100;
+}
+#r1-recording-overlay.r1-active { display: flex; }
+
+.r1-rec-ring {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: 3px solid var(--r1-danger);
+  display: flex; align-items: center; justify-content: center;
+  animation: r1pulse 1.2s ease-in-out infinite;
+}
+.r1-rec-dot {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--r1-danger);
+}
+@keyframes r1pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.1); opacity: 0.7; }
+}
+.r1-rec-label {
+  font-size: 12px; font-weight: 600;
+  color: var(--r1-danger); letter-spacing: 1px; text-transform: uppercase;
+}
+.r1-rec-hint { font-size: 9px; color: var(--r1-text-dim); }
+
+/* ─── Virtual Keyboard ────────────────────────────────────── */
+#r1-keyboard-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  background: var(--r1-bg);
+  z-index: 50;
+}
+#r1-keyboard-overlay.r1-active { display: flex; }
+
+#r1-keyboard-header {
+  height: 28px; min-height: 28px;
+  display: flex; align-items: center;
+  padding: 0 8px;
+  background: var(--r1-surface);
+  border-bottom: 1px solid #2a2a2a;
+  gap: 6px;
+}
+#r1-keyboard-header .r1-kbd-back-btn {
+  font-size: 26px; color: var(--r1-accent);
+  cursor: pointer; line-height: 1;
+  padding: 4px 6px; margin: -4px -6px;
+  background: none; border: none;
+}
+#r1-keyboard-header .r1-kbd-title {
+  font-size: 11px; font-weight: 600;
+  color: var(--r1-text); flex: 1;
+}
+#r1-keyboard-header .r1-kbd-send-btn {
+  font-size: 11px; background: var(--r1-accent);
+  border: none; border-radius: 4px;
+  padding: 4px 8px; color: #fff;
+  cursor: pointer; font-weight: 600;
+}
+
+#r1-compose-history {
+  flex: 1;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 4px 8px;
+  display: flex; flex-direction: column; gap: 3px;
+  border-bottom: 1px solid #2a2a2a;
+}
+#r1-compose-history::-webkit-scrollbar { width: 2px; }
+#r1-compose-history::-webkit-scrollbar-thumb { background: #333; }
+#r1-compose-history .r1-msg-bubble { font-size: 9px; padding: 3px 6px; pointer-events: none; }
+#r1-compose-history .r1-msg-sender { font-size: 8px; }
+
+#r1-compose-area {
+  flex-shrink: 0;
+  position: relative;
+  margin: 3px 8px 3px;
+}
+#r1-compose-display {
+  height: 36px;
+  background: var(--r1-surface);
+  border-radius: 6px;
+  padding: 5px 22px 5px 8px;
+  font-size: 12px; line-height: 1.4;
+  overflow-y: auto; word-break: break-word;
+  color: var(--r1-text);
+  border: 1px solid #2a2a2a;
+  caret-color: var(--r1-accent);
+}
+#r1-compose-display:empty::before {
+  content: 'Type a message…';
+  color: var(--r1-text-dim);
+  pointer-events: none;
+}
+#r1-compose-display:focus { outline: none; }
+
+#r1-kbd-dismiss {
+  position: absolute; top: 3px; right: 4px;
+  background: none; border: none; color: var(--r1-text-dim);
+  font-size: 14px; line-height: 1; cursor: pointer; padding: 2px;
+  touch-action: manipulation;
+}
+
+#r1-virtual-keyboard {
+  flex-shrink: 0;
+  display: flex; flex-direction: column;
+  padding: 1px 4px 2px; gap: 1px;
+  background: #111;
+}
+.r1-kbd-row { display: flex; gap: 2px; justify-content: center; }
+
+.r1-key {
+  flex: 1; min-height: 22px;
+  background: #2a2a2e;
+  border: 1px solid #555; border-bottom: 2px solid #444;
+  color: #fff; border-radius: 4px;
+  font-size: 10px; font-weight: 500;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  touch-action: manipulation;
+  user-select: none; -webkit-user-select: none;
+}
+.r1-key:active  { background: #555; }
+.r1-key.r1-wide  { flex: 1.6; font-size: 9px; }
+.r1-key.r1-space { flex: 4; }
+.r1-key.r1-action { background: var(--r1-accent-dim); border-color: #124e70; }
+.r1-key.r1-action:active { background: var(--r1-accent); }
+.r1-key.r1-shifted { background: #3a3a44; color: #aad4ff; }
+
+/* ─── Emoji Picker ────────────────────────────────────────── */
+#r1-emoji-backdrop {
+  position: absolute; inset: 0; z-index: 199; display: none;
+}
+#r1-emoji-backdrop.r1-open { display: block; }
+
+#r1-emoji-picker {
+  position: absolute; z-index: 200;
+  bottom: 4px; left: 50%;
+  transform: translateX(-50%);
+  width: 232px; max-height: 156px;
+  background: #1e1e24;
+  border: 1px solid #2a2a2a; border-radius: 8px;
+  padding: 6px; overflow-y: auto; display: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+}
+#r1-emoji-picker.r1-open { display: block; }
+#r1-emoji-picker::-webkit-scrollbar { width: 2px; }
+#r1-emoji-picker::-webkit-scrollbar-thumb { background: #2a2a2a; }
+
+.r1-emoji-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.r1-emoji-btn {
+  font-size: 17px; height: 28px;
+  background: none; border: none; border-radius: 4px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  touch-action: manipulation;
+}
+.r1-emoji-btn:active { background: #2a2a2a; }
+
+/* ─── Toast ───────────────────────────────────────────────── */
+#r1-toast {
+  position: absolute;
+  bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(40px);
+  background: var(--r1-surface);
+  color: var(--r1-text);
+  font-size: 9px; padding: 5px 10px;
+  border-radius: 10px; border: 1px solid #333;
+  opacity: 0; transition: all 0.25s ease;
+  z-index: 200; pointer-events: none; white-space: nowrap;
+}
+#r1-toast.r1-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─── Spinner ─────────────────────────────────────────────── */
+.r1-spinner {
+  width: 20px; height: 20px;
+  border: 2px solid #333; border-top-color: var(--r1-accent);
+  border-radius: 50%;
+  animation: r1spin 0.7s linear infinite;
+  margin: 0 auto 8px;
+}
+@keyframes r1spin { to { transform: rotate(360deg); } }
