@@ -18,6 +18,7 @@ A drop-in CSS + JS kit for [Rabbit R1](https://www.rabbit.tech/) Creation apps. 
 | Audio playback | Tap-to-play/pause for voice messages and audio files |
 | Emoji picker | 48-emoji grid usable for both text insertion and message reactions |
 | Long-press to react | Hold a message bubble to open the emoji picker in react mode |
+| Profile photo avatars | Display user profile photos in circular avatars; fallback to letter initials |
 | Desktop fallback | Spacebar = PTT, arrow keys = scroll, Enter/Backspace = select/back |
 | Toast notifications | Lightweight pop-up toasts |
 
@@ -230,6 +231,53 @@ The kit listens for these `CustomEvent`s on `window`, which the R1 WebView bridg
 | `scrollDown` | Scroll wheel turned down |
 
 STT transcripts come back via `window.onPluginMessage` with `{ type: 'sttEnded', transcript: '...' }`. The kit wires this automatically — the result is passed to your `onSend` callback.
+
+---
+
+## Profile Photo Avatars
+
+Display actual Telegram user profile photos in circular avatars instead of letter initials.
+
+**CSS Classes:**
+
+```css
+.r1-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+/* For text-based fallback (letter initials) */
+.r1-avatar.no-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 11px;
+  color: #fff;
+}
+```
+
+**Usage:**
+
+```html
+<!-- With profile photo -->
+<div class="r1-avatar" style="background-image: url('/api/user/123/photo')"></div>
+
+<!-- Fallback: letter initial if photo unavailable -->
+<div class="r1-avatar no-photo" style="background: #4080ff">A</div>
+```
+
+**Backend Implementation:**
+
+If implementing a backend endpoint to serve profile photos, use the pattern from r1-telegram:
+- Endpoint: `GET /chats/:id/photo` with auth token
+- Return: JPEG image with `Content-Type: image/jpeg`
+- Caching: In-memory cache with TTL to reduce API calls
+- Graceful degradation: Serve 404 for missing photos, let frontend fallback to letters
 
 ---
 
