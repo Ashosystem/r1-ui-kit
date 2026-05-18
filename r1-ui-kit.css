@@ -238,25 +238,21 @@ body.r1-in-landscape .r1-scroll-area {
   cursor: pointer; font-weight: 600;
 }
 
-#r1-compose-history {
-  flex: 1;
-  overflow-y: auto; overflow-x: hidden;
-  padding: 4px 8px;
-  display: flex; flex-direction: column; gap: 3px;
-  border-bottom: 1px solid #2a2a2a;
-}
-#r1-compose-history::-webkit-scrollbar { width: 2px; }
-#r1-compose-history::-webkit-scrollbar-thumb { background: #333; }
-#r1-compose-history .r1-msg-bubble { font-size: 9px; padding: 3px 6px; pointer-events: none; }
-#r1-compose-history .r1-msg-sender { font-size: 8px; }
+/* Compose history hidden — keyboard overlay is for composition, not review */
+#r1-compose-history { display: none; }
 
 #r1-compose-area {
-  flex-shrink: 0;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   position: relative;
-  margin: 3px 8px 3px;
+  margin: 4px 8px;
+  min-height: 0;
 }
 #r1-compose-display {
-  height: 36px;
+  flex: 1;
+  min-height: 0;
   background: var(--r1-surface);
   border-radius: 6px;
   padding: 5px 22px 5px 8px;
@@ -305,6 +301,11 @@ body.r1-in-landscape .r1-scroll-area {
 .r1-key.r1-action { background: var(--r1-accent-dim); border-color: #124e70; }
 .r1-key.r1-action:active { background: var(--r1-accent); }
 .r1-key.r1-shifted { background: #3a3a44; color: #aad4ff; }
+
+/* Landscape: tighter keyboard so keys stay visible */
+body.r1-in-landscape .r1-key { min-height: 18px; font-size: 9px; }
+body.r1-in-landscape #r1-virtual-keyboard { padding: 0 4px 1px; gap: 0; }
+body.r1-in-landscape .r1-kbd-row { gap: 1px; }
 
 /* ─── Emoji Picker ────────────────────────────────────────── */
 #r1-emoji-backdrop {

@@ -20,8 +20,7 @@
                hasAudio, audioUrl, audioName, isVoice,
                replyTo:{author,text}, reactions:[{emoji,count}] }
 
-     R1Kit.showKeyboard({ history, onSend })
-       history: [{text, out, senderName}]  — shown above input
+     R1Kit.showKeyboard({ onSend })
      R1Kit.hideKeyboard()
 
      R1Kit.showRecording()
@@ -404,23 +403,8 @@
   function showKeyboard(options) {
     options = options || {};
     kbdOnSend = options.onSend || null;
-    const overlay   = document.getElementById('r1-keyboard-overlay');
-    const historyEl = document.getElementById('r1-compose-history');
-    const display   = document.getElementById('r1-compose-display');
-
-    // Populate history
-    const history = options.history || [];
-    if (history.length) {
-      historyEl.innerHTML = history.slice(-8).map(m => `
-        <div class="r1-msg-bubble ${m.out ? 'r1-out' : 'r1-in'}">
-          ${!m.out ? `<div class="r1-msg-sender">${esc(m.senderName || '')}</div>` : ''}
-          <div>${esc(m.text || '')}</div>
-        </div>`).join('');
-      historyEl.scrollTop = historyEl.scrollHeight;
-    } else {
-      historyEl.innerHTML = '';
-    }
-
+    const overlay = document.getElementById('r1-keyboard-overlay');
+    const display = document.getElementById('r1-compose-display');
     display.innerHTML = '';
     overlay.classList.add('r1-active');
     setTimeout(() => display.focus(), 50);
