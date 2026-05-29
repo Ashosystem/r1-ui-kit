@@ -390,7 +390,9 @@
       else if (id === 'r1-kbd-sym')  { symMode = !symMode; applySymMode(); }
       else if (id === 'r1-kbd-backspace') { del(); }
       else if (id === 'r1-kbd-space')     { insert(' '); }
-      else if (id === 'r1-kbd-enter')     { doSend(); }
+      // Enter inserts a newline instead of sending — it sits next to backspace
+      // and misfires were sending early. Send via the dedicated Send button.
+      else if (id === 'r1-kbd-enter')     { display.focus(); document.execCommand('insertLineBreak'); }
       else if (id === 'r1-kbd-emoji')     { openEmojiPicker('insert', null); }
       else if (v) {
         const ch = (shifted && !symMode) ? v.toUpperCase() : v;
