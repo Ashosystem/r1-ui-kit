@@ -232,6 +232,8 @@ The kit listens for these `CustomEvent`s on `window`, which the R1 WebView bridg
 
 STT transcripts come back via `window.onPluginMessage` with `{ type: 'sttEnded', transcript: '...' }`. The kit wires this automatically — the result is passed to your `onSend` callback.
 
+> ⚠️ **STT only fires on a real R1 device.** The kit uses the R1's native `CreationVoiceHandler` bridge — it does **not** bundle a desktop fallback (Web Speech API / `MediaRecorder`). In a desktop browser the recording overlay will flash but no transcript will arrive, because there is no `CreationVoiceHandler` present. This is expected — test STT on-device. If you need voice input while developing on desktop, wire your own recognition inside the `onPTTStart` / `onPTTEnd` callbacks.
+
 ---
 
 ## Profile Photo Avatars
