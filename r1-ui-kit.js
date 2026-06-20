@@ -104,7 +104,11 @@
     s = s.replace(/```([\s\S]*?)```/g, (_, c) => '<pre><code>' + c.trim() + '</code></pre>');
     s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
     s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/_([^_\n]+)_/g, '<em>$1</em>');
+    s = s.replace(/__([^_\n]+)__/g, '<em>$1</em>');
+    s = s.replace(/_([^_\n]+)_/g, '<u>$1</u>');
+    s = s.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    s = s.replace(/~~([^~\n]+)~~/g, '<del>$1</del>');
+    s = s.replace(/~([^~\n]+)~/g, '<del>$1</del>');
     const lines = s.split('\n');
     let out = '', inList = false;
     for (const line of lines) {
